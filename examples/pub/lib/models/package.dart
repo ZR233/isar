@@ -29,10 +29,11 @@ class Package {
     this.license,
     this.osiLicense,
     this.platforms,
-  });
+  }) : id = Isar.autoIncrement;
 
-  String get id => '$name$version';
+  final Id id;
 
+  @Index(unique: true, replace: true, composite: [CompositeIndex('version')])
   final String name;
 
   final String version;
@@ -69,6 +70,7 @@ class Package {
 
   final bool? osiLicense;
 
+  @enumerated
   final List<SupportedPlatform>? platforms;
 
   static List<Package> fromApiPackage(ApiPackage package) {

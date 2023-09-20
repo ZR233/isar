@@ -25,17 +25,19 @@ class MarkdownViewer extends ConsumerWidget {
     final html = ref.read(_markdownHtmlPod(markdown));
     return Html(
       data: html,
-      onLinkTap: (url, attributes, element) {
+      onLinkTap: (url, context, attributes, element) {
         if (url != null) {
           launchUrlString(url);
         }
       },
-      extensions: [
-        const SvgHtmlExtension(),
-        TagExtension(
-          tagsToExtend: {'code'},
-          builder: (context) {
-            final code = context.element!.text;
+      customRenders: {
+        svgTagMatcher(): svgTagRender(),
+        svgDataUriMatcher(): svgDataImageRender(),
+        svgAssetUriMatcher(): svgAssetImageRender(),
+        svgNetworkSourceMatcher(): svgNetworkImageRender(),
+        tagMatcher('code'): CustomRender.widget(
+          widget: (context, children) {
+            final code = context.tree.element!.text;
             final codeBgColor =
                 theme.colorScheme.secondaryContainer.withOpacity(0.25);
             if (code.contains('\n')) {
@@ -71,9 +73,8 @@ class MarkdownViewer extends ConsumerWidget {
             }
           },
         ),
-        TagExtension(
-          tagsToExtend: {'h1'},
-          builder: (context) {
+        tagMatcher('h1'): CustomRender.widget(
+          widget: (context, children) {
             return Container(
               width: double.infinity,
               padding: const EdgeInsets.only(bottom: 5),
@@ -83,15 +84,14 @@ class MarkdownViewer extends ConsumerWidget {
                 ),
               ),
               child: Text(
-                context.element!.text,
-                style: context.style!.generateTextStyle(),
+                context.tree.element!.text,
+                style: context.tree.style.generateTextStyle(),
               ),
             );
           },
         ),
-        TagExtension(
-          tagsToExtend: {'h2'},
-          builder: (context) {
+        tagMatcher('h2'): CustomRender.widget(
+          widget: (context, children) {
             return Container(
               width: double.infinity,
               padding: const EdgeInsets.only(bottom: 5),
@@ -101,13 +101,13 @@ class MarkdownViewer extends ConsumerWidget {
                 ),
               ),
               child: Text(
-                context.element!.text,
-                style: context.style!.generateTextStyle(),
+                context.tree.element!.text,
+                style: context.tree.style.generateTextStyle(),
               ),
             );
           },
         ),
-      ],
+      },
     );
   }
 }

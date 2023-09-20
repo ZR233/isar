@@ -16,7 +16,10 @@ class PackageAndVersion {
 }
 
 Future<void> loadAssets(PackageAndVersion p) async {
-  final isar = Isar.get(schemas: [PackageSchema, AssetSchema]);
+  final isar = Isar.openSync(
+    [PackageSchema, AssetSchema],
+    inspector: false,
+  );
 
   Asset? readme;
   Asset? changelog;
@@ -55,8 +58,8 @@ Future<void> loadAssets(PackageAndVersion p) async {
   }
 
   if (readme != null || changelog != null) {
-    isar.write((isar) {
-      isar.assets.putAll([
+    isar.writeTxnSync(() {
+      isar.assets.putAllSync([
         if (readme != null) readme,
         if (changelog != null) changelog,
       ]);

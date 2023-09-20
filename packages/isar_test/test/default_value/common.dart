@@ -3,14 +3,9 @@ import 'package:isar/isar.dart';
 part 'common.g.dart';
 
 enum MyEnum {
-  value1(1),
-  value2(2),
-  value3(3);
-
-  const MyEnum(this.value);
-
-  @enumValue
-  final int value;
+  value1,
+  value2,
+  value3;
 }
 
 @embedded
@@ -29,5 +24,5 @@ class MyEmbedded {
 class EmptyModel {
   EmptyModel(this.id);
 
-  final int id;
+  final Id id;
 }
