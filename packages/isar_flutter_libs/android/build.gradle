@@ -25,6 +25,7 @@ android {
     if (project.android.hasProperty("namespace")) {
         namespace 'dev.isar.isar_flutter_libs'
     }
+
     compileSdkVersion 30
 
     defaultConfig {
